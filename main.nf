@@ -15,7 +15,7 @@ workflow {
     guppy_barcoder(ch_barcodes.combine(ch_run_dir))
 
     ch_barcoding_summary_summaries = summarize_barcoding_summary(guppy_barcoder.out.barcoding_summary)
-    ch_barcoding_summary_summaries.map{ it -> it[1] }.collectFile(keepHeader: true, name: 'barcoding_summary_summary.csv', storeDir: params.outdir)
+    ch_barcoding_summary_summaries.map{ it -> it[1] }.collectFile(keepHeader: true, sort: { it.text }, newLine: true, name: 'barcoding_summary_summary.csv', storeDir: params.outdir)
 
     combine_fastqs(guppy_barcoder.out.fastqs)
     
