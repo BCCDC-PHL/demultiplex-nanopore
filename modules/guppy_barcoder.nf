@@ -48,17 +48,17 @@ process combine_fastqs {
     
     tag { barcode + " / " + sample_id }
 
-    publishDir "${params.outdir}", pattern: "combined/${sample_id}_RL.fastq.gz", mode: 'copy', saveAs: { filename -> filename.split("/").last() }
+    publishDir "${params.outdir}", pattern: "combined/${sample_id}_${barcode}_RL.fastq.gz", mode: 'copy', saveAs: { filename -> filename.split("/").last() }
 
     input:
     tuple val(barcode), val(sample_id), path(fastqs)
 
     output:
-    tuple val(sample_id), path("combined/${sample_id}_RL.fastq.gz")
+    tuple val(sample_id), path("combined/${sample_id}_${barcode}_RL.fastq.gz")
 
     script:
     """
     mkdir combined
-    cat *.fastq.gz > combined/${sample_id}_RL.fastq.gz
+    cat *.fastq.gz > combined/${sample_id}_${barcode}_RL.fastq.gz
     """
 }
