@@ -3,16 +3,18 @@ process guppy_barcoder {
     tag { barcode + " / " + sample_id }
 
     input:
-    tuple val(barcode), val(sample_id), path(run_dir)
+    tuple val(barcode), val(alias), path(run_dir)
 
     output:
     tuple val(barcode), val(sample_id), path("guppy_barcoder_output/${barcode}/*.fastq.gz"), emit: fastqs
     tuple val(barcode), val(sample_id), path("${sample_id}_barcoding_summary.tsv"), emit: barcoding_summary
+
     script:
+    sample_id = alias.split("_")[0]
     """
     guppy_barcoder \
 	-t ${task.cpus} \
-	-i ${run_dir}/fastq_pass/${barcode} \
+	-i ${run_dir}/fastq_pass/${alias} \
 	-s guppy_barcoder_output \
 	--detect_mid_strand_barcodes \
 	--trim_adapters \
